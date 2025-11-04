@@ -43,16 +43,17 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 1, 
     borderColor: '#ccc',
-    backgroundColor:'#D3D5D1',
-    borderRadius: 75,
+    backgroundColor:'#E6E6E6',
+    borderRadius: 50,
     marginBottom: 15, 
     paddingHorizontal: 20,
-    color: '#6C6C6C',
+    color: '#9E9E9E',
   },
   botao: {
     backgroundColor: '#4CAF50',
     width: '75%', 
-    padding: 15, borderRadius: 75,
+    padding: 15,
+    borderRadius: 50,
     alignItems: 'center'
   },
   botaoTexto: { 
