@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-export default function Login() {
+export default function LoginScreen() {
+    
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+
+    async function Cadastro() {
+        const linkCadastro = '../'
+    }
+
     return (
     <View style={styles.container}>
         <View>
@@ -18,19 +26,31 @@ export default function Login() {
             placeholder='E-mail'
             placeholderTextColor='#9E9E9E'
             style={styles.input}
+            value={email}
             />
             <TextInput
             placeholder='Senha'
             placeholderTextColor='#9E9E9E' 
             style={styles.input} 
+            value={senha}
             />
             {/* botão do login grandão moss */}
             <TouchableOpacity style={styles.button} onPress={() => console.log('Login clicado')}>
             <Text style={styles.textoLogin}>Login</Text>
             </TouchableOpacity>
         </View>
+        <Text style={styles.caixaLink}>
+        Esqueceu sua senha?{' '}
+        <Text style={styles.link} onPress={() => console.log('Clicou em Esqueci a senha')}>
+          Clique aqui.
+        </Text>
+      </Text>
+      <Text style={styles.caixaLink}>
+        <Text style={styles.link} onPress={() => console.log('Clicou em Esqueci a senha')}>
+          Cadastro
+        </Text>
+      </Text>
 
-        
     </View>
     )
 }
@@ -38,9 +58,9 @@ export default function Login() {
 const styles = StyleSheet.create ({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
         alignItems: 'center',
         paddingTop: height * 0.08,
+        justifyContent: 'center'
     },
     titulos: {
         fontSize: width * 0.18,
@@ -71,5 +91,13 @@ const styles = StyleSheet.create ({
         fontWeight: '600',
         fontSize: width * 0.06,
         textAlign: 'center'
+    },
+    caixaLink: {
+        marginTop: height * 0.03,
+        color: '#555',
+        fontSize: width * 0.04
+    },
+    link: {
+        color: '#007BFF'
     }
 })
