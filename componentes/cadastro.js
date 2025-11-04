@@ -28,15 +28,41 @@ export default function FormCadastro() {
 }
 
 const styles = StyleSheet.create({
-  container: { width: '100%', alignItems: 'center', paddingHorizontal: 20 },
-  titulo: { fontSize: 50, fontWeight: 'bold', marginBottom: 20, color: '#043F75' },
+  container: { 
+    width: '100%',
+    alignItems: 'center',
+    paddingHorizontal: 20
+  },
+  titulo: { 
+    fontSize: 50,
+    fontWeight: 'bold',
+    marginBottom: 20,
+   color: '#043F75' },
   input: {
-    width: '85%', height: 50, borderWidth: 1, borderColor: '#ccc',
-    backgroundColor:'#D3D5D1', borderRadius: 75, marginBottom: 15, paddingHorizontal: 20, color: '#6C6C6C',
+    width: '85%',
+    height: 50,
+    borderWidth: 1, 
+    borderColor: '#ccc',
+    backgroundColor:'#D3D5D1',
+    borderRadius: 75,
+    marginBottom: 15, 
+    paddingHorizontal: 20,
+    color: '#6C6C6C',
   },
   botao: {
-    backgroundColor: '#4CAF50', width: '75%', padding: 15, borderRadius: 75, alignItems: 'center'
+    backgroundColor: '#4CAF50',
+    width: '75%', 
+    padding: 15, borderRadius: 75,
+    alignItems: 'center'
   },
-  botaoTexto: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-  fazerLogin:{ color: '#1080FF', textDecorationLine: 'underline', marginBottom: 20 }
+  botaoTexto: { 
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16 
+  },
+  fazerLogin:{ 
+    color: '#1080FF', 
+    textDecorationLine: 'underline',
+    marginBottom: 20 
+  }
 });
