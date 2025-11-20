@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 const { width, height } = Dimensions.get('window');
 
-export default function LoginScreen() {
+export default function Login() {
+    const router = useRouter();
     
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
@@ -38,18 +40,20 @@ export default function LoginScreen() {
             <TouchableOpacity style={styles.button} onPress={() => console.log('Login clicado')}>
             <Text style={styles.textoLogin}>Login</Text>
             </TouchableOpacity>
+
         </View>
         <Text style={styles.caixaLink}>
         Esqueceu sua senha?{' '}
         <Text style={styles.link} onPress={() => console.log('Clicou em Esqueci a senha')}>
           Clique aqui.
         </Text>
-      </Text>
-      <Text style={styles.caixaLink}>
-        <Text style={styles.link} onPress={() => console.log('Clicou em Esqueci a senha')}>
-          Cadastro
         </Text>
-      </Text>
+
+        <TouchableOpacity onPress={() => router.push('/cadastro')}>
+            <Text style={styles.link}>
+            Cadastre-se
+            </Text>
+        </TouchableOpacity>
 
     </View>
     )
@@ -94,7 +98,7 @@ const styles = StyleSheet.create ({
     },
     caixaLink: {
         marginTop: height * 0.03,
-        color: '#555',
+        color: '#555',  
         fontSize: width * 0.04
     },
     link: {

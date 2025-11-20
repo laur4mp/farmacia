@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { useRouter } from 'expo-router';
+
+const { width, height } = Dimensions.get('window');
 
 export default function FormCadastro() {
   const [nome, setNome] = useState('');
@@ -12,56 +15,60 @@ export default function FormCadastro() {
     <View style={styles.container}>
       <Text style={styles.titulo}>Cadastrar</Text>
 
-      <TextInput style={styles.input} placeholder="Nome" value={nome} onChangeText={setNome} />
-      <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
-      <TextInput style={styles.input} placeholder="Senha" value={senha} onChangeText={setSenha} secureTextEntry />
-      <TextInput style={styles.input} placeholder="Confirmar Senha" value={confSenha} onChangeText={setConfSenha} secureTextEntry />
-      <TextInput style={styles.input} placeholder="Telefone" value={telefone} onChangeText={setTelefone} keyboardType="phone-pad" />
+      <TextInput style={styles.input} placeholder="Nome" value={nome} placeholderTextColor='#9E9E9E' onChangeText={setNome} />
+      <TextInput style={styles.input} placeholder="Email" value={email} placeholderTextColor='#9E9E9E' onChangeText={setEmail} keyboardType="email-address" />
+      <TextInput style={styles.input} placeholder="Senha" value={senha} placeholderTextColor='#9E9E9E' onChangeText={setSenha} secureTextEntry />
+      <TextInput style={styles.input} placeholder="Confirmar Senha" value={confSenha} placeholderTextColor='#9E9E9E' onChangeText={setConfSenha} secureTextEntry />
+      <TextInput style={styles.input} placeholder="Telefone" value={telefone} placeholderTextColor='#9E9E9E' onChangeText={setTelefone} keyboardType="phone-pad" />
 
-      <Text style={styles.fazerLogin}>Esqueci a senha</Text>
-
-      <TouchableOpacity style={styles.botao}>
+      <TouchableOpacity style={styles.botao} onPress={() => console.log('Login clicado')}>
         <Text style={styles.botaoTexto}>Cadastrar</Text>
       </TouchableOpacity>
+
+      <Text style={styles.fazerLogin}>Esqueci a senha</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { 
-    width: '100%',
+    flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 20
+    paddingTop: height * 0.08,
+    justifyContent: 'center'
   },
   titulo: { 
-    fontSize: 50,
-    fontWeight: 'bold',
-    marginBottom: 20,
-   color: '#043F75' },
+    fontSize: width * 0.18,
+    fontWeight: '700', // deixa grosso, lá ele
+    color: '#1E3A5F',
+    marginBottom: height * 0.04,
+  },
   input: {
-    width: '85%',
-    height: 50,
-    borderWidth: 1, 
-    borderColor: '#ccc',
-    backgroundColor:'#E6E6E6',
-    borderRadius: 50,
-    marginBottom: 15, 
+    width: width * 0.8,
+    height: height * 0.06,
+    backgroundColor: '#E6E6E6',
     paddingHorizontal: 20,
-    color: '#9E9E9E',
+    fontsize: width * 0.05,
+    marginBottom: height * 0.02,
+    borderRadius: 30
   },
   botao: {
-    backgroundColor: '#4CAF50',
-    width: '75%', 
-    padding: 15,
-    borderRadius: 50,
-    alignItems: 'center'
+    width: width * 0.8,
+    height: height * 0.06,
+    backgroundColor: '#2bc731ff',
+    borderRadius: 30,
+    alightItems: 'center',
+    justifyContent: 'center',
+    marginTop: height * 0.01
   },
   botaoTexto: { 
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16 
+    color: '#ffffff',
+    fontWeight: '600',
+    fontSize: width * 0.06,
+    textAlign: 'center'
   },
   fazerLogin:{ 
+    padding: 8,
     color: '#1080FF', 
     textDecorationLine: 'underline',
     marginBottom: 20 

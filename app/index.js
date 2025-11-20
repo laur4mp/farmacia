@@ -1,11 +1,11 @@
 import { StyleSheet, View } from "react-native";
-import LoginScreen from "../componentes/button";
+import Login from "../componentes/button";
 import BolasVerdes from "../componentes/fundo";
 
-export default function Page() {
+export default function LoginScreen() {
   return (
     <BolasVerdes>
-      <LoginScreen />
+      <Login/>
     </BolasVerdes>
   );
 }
