@@ -25,7 +25,6 @@ export default function FormCadastro() {
         <Text style={styles.botaoTexto}>Cadastrar</Text>
       </TouchableOpacity>
 
-      <Text style={styles.fazerLogin}>Esqueci a senha</Text>
     </View>
   );
 }
@@ -34,7 +33,7 @@ const styles = StyleSheet.create({
   container: { 
     flex: 1,
     alignItems: 'center',
-    paddingTop: height * 0.08,
+    paddingTop: height * 0,
     justifyContent: 'center'
   },
   titulo: { 
