@@ -1,9 +1,8 @@
-import { View, Text } from "react-native";
+import React from 'react';
+import Categoria from "../componentes/categoria";
 
 export default function CategoriaScreen() {
   return (
-    <View>
-      <Text>Você está na categoria!</Text>
-    </View>
+    <Categoria />
   );
 }
