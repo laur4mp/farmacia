@@ -15,7 +15,13 @@ const cadastroRoute = new Route({
   path: '/cadastro',
   component: CadastroScreen,
 });
+const categoriaRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/categoria',
+  component: CategoriaScreen,
+});
 
-const routeTree = rootRoute.addChildren([loginRoute, cadastroRoute]);
+
+const routeTree = rootRoute.addChildren([loginRoute, cadastroRoute, categoriaRoute]);
 
 export const router = new Router({ routeTree });

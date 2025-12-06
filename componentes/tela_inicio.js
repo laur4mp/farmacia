@@ -1,11 +1,15 @@
-import { View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import CardProduto from "./cardProduto";
+import { useRouter } from 'expo-router';
 
 const { width, height } = Dimensions.get("window");
 
 export default function TelaDeInicio() {
+    const router = useRouter();
+  
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
 
       <View style={styles.topBar}>
         <TouchableOpacity style={styles.perfilIcone}>
@@ -23,33 +27,44 @@ export default function TelaDeInicio() {
         </TouchableOpacity>
       </View>
 
-       <Text style={styles.subtitulo}>Buscar por categoria</Text>
-
       <View style={styles.categoriasRow}>
-        <View style={styles.categoria}>
+
+        <TouchableOpacity 
+          style={styles.categoria}
+          onPress={() => router.push('/categoria')}>
           <Text style={styles.catIcon}>o</Text>
           <Text style={styles.catText}>Medicamentos</Text>
-        </View>
+        </TouchableOpacity>
 
-        <View style={styles.categoria}>
+        <TouchableOpacity 
+          style={styles.categoria}
+          onPress={() => router.push('/categoria')}>
           <Text style={styles.catIcon}>o</Text>
           <Text style={styles.catText}>Beleza</Text>
-        </View>
+        </TouchableOpacity>
 
-        <View style={styles.categoria}>
+        <TouchableOpacity 
+          style={styles.categoria}
+          onPress={() => router.push('/categoria')}>
           <Text style={styles.catIcon}>o</Text>
           <Text style={styles.catText}>Suplementos</Text>
-        </View>
+        </TouchableOpacity>
 
-        <View style={styles.categoria}>
+        <TouchableOpacity 
+          style={styles.categoria}
+          onPress={() => router.push('/categoria')}>
           <Text style={styles.catIcon}>o</Text>
           <Text style={styles.catText}>Higiene</Text>
-        </View>
+        </TouchableOpacity>
+
       </View>
 
-      <Text style={styles.subtitulo}>Produtos populares</Text>
+      <Text style={styles.subtitulo}>Produtos recomendados</Text>
+      <View style={styles.viewCard}>
+        <CardProduto id={1} nome={"Dipirona Monidrata"} status={"Disponível"} preco={"R$ 10,00"}/>
+      </View>
 
-    </View>
+    </ScrollView>
   );
 }
 
@@ -141,4 +156,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: 'bold'
   },
+
+  
+  viewCard: {
+    flexDirection: "row",
+    flexWrap: "wrap"
+  }
 });
