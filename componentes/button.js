@@ -1,14 +1,27 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 
 const { width, height } = Dimensions.get('window');
 
 export default function Login() {
     const router = useRouter();
-    
+
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+
+    async function validarLogin() {
+        const usuarioSalvo = await AsyncStorage.getItem('usuario');
+        const senhaSalva = await AsyncStorage.getItem('senha');
+
+        if (email === usuarioSalvo && senha === senhaSalva) {
+            Alert.alert('Login bem-sucedido!');
+            router.push('/telaInicial');
+
+        } else {
+            Alert.alert('E-mail ou senha incorretos.');
+        }}
 
     async function Cadastro() {
         const linkCadastro = '../'
@@ -29,15 +42,18 @@ export default function Login() {
             placeholderTextColor='#9E9E9E'
             style={styles.input}
             value={email}
+            onChangeText={text => setEmail(text)}
             />
             <TextInput
             placeholder='Senha'
             placeholderTextColor='#9E9E9E' 
             style={styles.input} 
             value={senha}
+            onChangeText={text => setSenha(text)}
+            secureTextEntry={true} //senha é no sigilo
             />
             {/* botão do login grandão moss */}
-            <TouchableOpacity style={styles.button} onPress={() => console.log('Login clicado')}>
+            <TouchableOpacity style={styles.button} onPress={validarLogin}>
             <Text style={styles.textoLogin}>Login</Text>
             </TouchableOpacity>
 
