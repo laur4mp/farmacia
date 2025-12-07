@@ -25,23 +25,18 @@ export default function FormCadastro() {
       return;
     }
     try {
-            await AsyncStorage.setItem(chaveEmail, email);
-            await AsyncStorage.setItem(chaveSenha, senha);
-
-            const userData = { nome, email, telefone };
-            await AsyncStorage.setItem('userData_' + email, JSON.stringify(userData));
-
-            Alert.alert('Sucesso', 'Cadastro realizado com sucesso! Você será redirecionado para o Login.');
-       
-            router.push('/'); 
-            
+          await AsyncStorage.setItem(chaveEmail, email);
+          await AsyncStorage.setItem(chaveSenha, senha);
+          const userData = { nome, email, telefone };
+          await AsyncStorage.setItem('userData_' + email, JSON.stringify(userData));
+          Alert.alert('Sucesso', 'Cadastro realizado com sucesso! Você será redirecionado para o Login.');
+          router.push('/'); 
         } catch (error) {
             console.error('Erro ao salvar dados:', error);
             Alert.alert('Erro', 'Ocorreu um erro ao tentar salvar seu cadastro.');
         }
     }
   
-
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>Cadastrar</Text>
@@ -103,4 +98,5 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     marginBottom: 20 
   }
+
 });
