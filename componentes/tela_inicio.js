@@ -1,4 +1,5 @@
-import { View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Alert } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from "@expo/vector-icons";
 import CardProduto from "./cardProduto";
 import { useRouter } from 'expo-router';
@@ -8,7 +9,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function TelaDeInicio() {
     const router = useRouter();
-  
+
   return (
     <ScrollView style={styles.container}>
 

@@ -1,16 +1,42 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
+const chaveEmail = 'usuario'; //chaves para salvar no storage
+const chaveSenha = 'senha';
 
 export default function FormCadastro() {
+  const router = useRouter();
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
   const [confSenha, setConfSenha] = useState('');
 
+   async function realizarCadastro() {
+    if(!nome || !email || !telefone || !senha || !confSenha) {
+      alert('Por favor, preencha todos os campos.');
+      return;
+    }
+    if(senha !== confSenha) {
+      alert('As senhas não coincidem.');
+      return;
+    }
+    try {
+          await AsyncStorage.setItem(chaveEmail, email);
+          await AsyncStorage.setItem(chaveSenha, senha);
+          const userData = { nome, email, telefone };
+          await AsyncStorage.setItem('userData_' + email, JSON.stringify(userData));
+          Alert.alert('Sucesso', 'Cadastro realizado com sucesso! Você será redirecionado para o Login.');
+          router.push('/'); 
+        } catch (error) {
+            console.error('Erro ao salvar dados:', error);
+            Alert.alert('Erro', 'Ocorreu um erro ao tentar salvar seu cadastro.');
+        }
+    }
+  
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>Cadastrar</Text>
@@ -21,7 +47,7 @@ export default function FormCadastro() {
       <TextInput style={styles.input} placeholder="Confirmar Senha" value={confSenha} placeholderTextColor='#9E9E9E' onChangeText={setConfSenha} secureTextEntry />
       <TextInput style={styles.input} placeholder="Telefone" value={telefone} placeholderTextColor='#9E9E9E' onChangeText={setTelefone} keyboardType="phone-pad" />
 
-      <TouchableOpacity style={styles.botao} onPress={() => console.log('Login clicado')}>
+      <TouchableOpacity style={styles.botao} onPress={realizarCadastro}>
         <Text style={styles.botaoTexto}>Cadastrar</Text>
       </TouchableOpacity>
 
@@ -72,4 +98,5 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     marginBottom: 20 
   }
+
 });
