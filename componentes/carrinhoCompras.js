@@ -20,7 +20,7 @@ const CarrinhoCompras = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>Carrinho</Text>
-      
+
       <ScrollView style={styles.listaItens}>
         {itensCarrinho.map(item => (
           <View key={item.id} style={styles.item}>
