@@ -25,28 +25,29 @@ const styles = StyleSheet.create({
         margin: 10
     },
     foto: {
-        width: width * 0.5,
-        height: height * 0.25,
-        alignSelf: "center"
-    },
+        width: "100%",
+        height: height * 0.18,
+        resizeMode: "contain",
+        marginTop: 10
+      },
     nome: {
         fontSize: 17,
         fontWeight: "bold",
-        marginTop: -20,
-        paddingLeft: 13,  
-        color: "#ffffff"
-    },
-    status: {
-        fontSize: 15,
+        marginTop: 10,
+        paddingHorizontal: 13,
+        color: "#fff"
+      },
+      status: {
+        fontSize: 16,
+        marginTop: 1,
+        paddingHorizontal: 13,
+        color: "#fff"
+      },
+      preco: {
+        fontSize: 18,
+        marginTop: 1,
+        paddingHorizontal: 13,
         fontWeight: "bold",
-        marginTop: -4,
-        paddingLeft: 13,
-        color: "#ffffffff"
-    },
-    preco: {
-        fontSize: 20,
-        paddingLeft: 13,
-        marginTop: -4,
-        color: "#ffffff"
-    },
+        color: "#fff"
+      }
 });
