@@ -5,6 +5,8 @@ import BolasVerdes from "../componentes/bolas_verdes";
 
 export default function LoginScreen() {
   return (
-      <TelaDeInicio />
+    <BolasVerdes>
+    <Login />
+    </BolasVerdes>
   );
 }

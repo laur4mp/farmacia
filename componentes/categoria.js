@@ -27,6 +27,7 @@ export default function Categoria() {
           nome={prod.nome}
           status={prod.status}
           preco={prod.preco}
+          imagem={prod.imagem}
         />
       ))}
       </View>

@@ -3,10 +3,10 @@ import { Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get("window");
 
-export default function CardProduto({ id, nome, status, preco}) {
+export default function CardProduto({ id, nome, status, preco, imagem}) {
   return (
     <View style={styles.card}>
-      <Image source={require("../assets/62ace36a12dfb868d61c5e95-removebg-preview.png")}
+      <Image source={imagem}
       style={styles.foto}/>
       <Text style={styles.nome}>{nome}</Text>
       <Text style={styles.status}>{status}</Text>
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: "bold",
         marginTop: -20,
-        paddingLeft: 13,
+        paddingLeft: 13,  
         color: "#ffffff"
     },
     status: {
