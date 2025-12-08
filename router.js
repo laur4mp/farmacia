@@ -1,6 +1,7 @@
 import { RootRoute, Route, Router } from '@tanstack/react-router';
 import LoginScreen from './index';        
 import CadastroScreen from './cadastro';
+import CarrinhoScreen from './carrinho';
 
 const rootRoute = new RootRoute();
 
@@ -9,7 +10,6 @@ const loginRoute = new Route({
   path: '/',
   component: LoginScreen,
 });
-
 const cadastroRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/cadastro',
@@ -20,8 +20,12 @@ const categoriaRoute = new Route({
   path: '/categoria',
   component: CategoriaScreen,
 });
+const carrinhoRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/carrinho',
+  component: CarrinhoScreen,
+});
 
-
-const routeTree = rootRoute.addChildren([loginRoute, cadastroRoute, categoriaRoute]);
+const routeTree = rootRoute.addChildren([loginRoute, cadastroRoute, categoriaRoute, carrinhoRoute, ]);
 
 export const router = new Router({ routeTree });

@@ -1,14 +1,19 @@
-import { View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Alert, FlatList } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from "@expo/vector-icons";
 import CardProduto from "./cardProduto";
 import { useRouter } from 'expo-router';
 import TopBar from "./topbar";
+import { produtos } from "../componentes/produtos";
 
 const { width, height } = Dimensions.get("window");
 
 export default function TelaDeInicio() {
     const router = useRouter();
+
+    const recomendadosIds = [1, 3, 4, 5];
+    const produtosRecomendados = produtos.filter(p =>
+    recomendadosIds.includes(p.id));
 
   return (
     <ScrollView style={styles.container}>
@@ -62,9 +67,35 @@ export default function TelaDeInicio() {
       </View>
 
       <Text style={styles.subtitulo}>Produtos recomendados</Text>
-      <View style={styles.viewCard}>
-        <CardProduto id={1} nome={"Dipirona Monidrata"} status={"Disponível"} preco={"R$ 10,00"}/>
-      </View>
+      
+      <FlatList
+        data={produtosRecomendados}
+        horizontal
+        keyExtractor={(item) => item.id.toString()}
+        showsHorizontalScrollIndicator={false}
+        
+        style={{ marginHorizontal: -width * 0.05 }}
+
+        contentContainerStyle={{
+          paddingLeft: width * 0.05,
+          paddingRight: width * 0.05,
+        }}
+
+        renderItem={({ item }) => (
+          <CardProduto
+            id={item.id}
+            nome={item.nome}
+            status={item.status}
+            preco={item.preco}
+            imagem={item.imagem}
+          />
+        )}
+      />
+
+      <Text style={styles.subtitulo}>Produtos recomendados</Text>
+
+      {/* só para dar espaço */}
+      <Text style={{ marginTop: 50 }}></Text>
 
     </ScrollView>
   );

@@ -1,10 +1,12 @@
 import { View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from 'expo-router';
 
 const { width, height } = Dimensions.get("window");
 
 export default function TopBar({titulo}) {
-  
+  const router = useRouter();
+
   return (
     <ScrollView style={styles.container}>
 
@@ -19,7 +21,8 @@ export default function TopBar({titulo}) {
       <View style={styles.searchRow}>
         <TextInput style={styles.input} placeholder="Buscar..." placeholderTextColor="#9E9E9E" />
 
-        <TouchableOpacity style={styles.carrinhoButton}>
+        <TouchableOpacity style={styles.carrinhoButton}
+          onPress={() => router.push('/carrinho')}>
           <Ionicons name="cart" size={width * 0.07} color="white" />
         </TouchableOpacity>
       </View>

@@ -31,6 +31,9 @@ export default function Categoria() {
         />
       ))}
       </View>
+      
+      {/* só para dar espaço */}
+      <Text style={{ marginTop: 50 }}></Text>
     </ScrollView>
   );
 }

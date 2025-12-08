@@ -65,7 +65,7 @@ export const produtos = [
   },
   {
     id: 9,
-    nome: "Batom Matte Vermelho",
+    nome: "Batom Vermelho",
     categoria: "Beleza",
     status: "Disponível",
     preco: "R$ 19,90",
