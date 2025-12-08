@@ -11,8 +11,9 @@ export default function TopBar({titulo}) {
     <ScrollView style={styles.container}>
 
       <View style={styles.topBar}>
-        <TouchableOpacity style={styles.perfilIcone}>
-          <Ionicons name="person" size={width * 0.07} color="white" />
+        <TouchableOpacity 
+          style={styles.favoritosIcone} onPress={() => router.push('/favoritos')}>
+          <Ionicons name="heart" size={width * 0.07} color="white" />
         </TouchableOpacity>
       </View>
 
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
   },
 
 
-  perfilIcone: {
+  favoritosIcone: {
     width: width * 0.12,
     height: width * 0.12,
     backgroundColor: "#2bc731ff",

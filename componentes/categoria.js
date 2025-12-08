@@ -1,5 +1,6 @@
 import { View, Text, Dimensions, ScrollView, StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
 import CardProduto from "../componentes/cardProduto";
 import TopBar from "../componentes/topbar";
 import { produtos } from "../componentes/produtos";
@@ -10,6 +11,29 @@ export default function Categoria() {
   const { categoria } = useLocalSearchParams();
 
   const filtrados = produtos.filter(p => p.categoria === categoria);
+
+  const [favoritos, setFavoritos] = useState([]);
+   // Carregar favoritos do AsyncStorage ao montar a tela
+  useEffect(() => {
+    carregarFavoritos();
+  }, []);
+
+  const carregarFavoritos = async () => {
+    const favs = await AsyncStorage.getItem("favoritos");
+    setFavoritos(favs ? JSON.parse(favs) : []);
+  };
+
+  // Alternar favorito e salvar no AsyncStorage
+  const toggleFavorito = async (id) => {
+    let lista = [...favoritos];
+    if (lista.includes(id)) {
+      lista = lista.filter(item => item !== id);
+    } else {
+      lista.push(id);
+    }
+    setFavoritos(lista);
+    await AsyncStorage.setItem("favoritos", JSON.stringify(lista));
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -28,6 +52,8 @@ export default function Categoria() {
           status={prod.status}
           preco={prod.preco}
           imagem={prod.imagem}
+          favorito={favoritos.includes(prod.id)}
+          onToggle={() => toggleFavorito(prod.id)}
         />
       ))}
       </View>

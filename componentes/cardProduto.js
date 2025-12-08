@@ -1,11 +1,22 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Dimensions } from 'react-native';
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get("window");
 
-export default function CardProduto({ id, nome, status, preco, imagem}) {
+export default function CardProduto({ id, nome, status, preco, imagem, favorito, onToggle }) {
+
   return (
     <View style={styles.card}>
+      <TouchableOpacity style={styles.favButton} onPress={onToggle}>
+        <Ionicons 
+          name={favorito ? "heart" : "heart-outline"} 
+          size={28} 
+          color={favorito ? "red" : "#fff"}  
+        />
+      </TouchableOpacity>
+
       <Image source={imagem}
       style={styles.foto}/>
       <Text style={styles.nome}>{nome}</Text>
@@ -22,7 +33,14 @@ const styles = StyleSheet.create({
         width: width * 0.4,
         height: height * 0.32, 
         padding: 1,
-        margin: 10
+        margin: 10,
+        position: "relative"
+    },
+    favButton: {
+        position: "absolute",
+        top: 10,
+        right: 10,
+        zIndex: 10,
     },
     foto: {
         width: "100%",
