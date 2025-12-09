@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Alert, FlatList } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect  } from 'expo-router';
 
 import CardProduto from "./cardProduto"; 
 import TopBar from "./topbar";
@@ -31,9 +31,10 @@ export default function TelaDeInicio() {
         }
     };
     
-    useEffect(() => {
+    useFocusEffect(
+    React.useCallback(() => {
         carregarFavoritos();
-    }, []);
+    }, []));
     
     const toggleFavorito = async (id) => {
         let lista = [...favoritos];

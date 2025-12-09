@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from 'react'; 
 const { width, height } = Dimensions.get("window");
 export default function CardProduto({ id, nome, preco, imagem, favorito, onToggle, onAddToCart, estoque }) {
+    
     const [quantidade, setQuantidade] = useState(1);
     const isDisponivel = estoque > 0; 
     const incrementarQuantidade = () => {

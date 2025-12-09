@@ -1,8 +1,8 @@
 import React from 'react'; 
-import FinalizarCompras from "../componentes/tela_finalizarCompras";
+import TelaFinalizarCompra from "../componentes/tela_finalizarCompras";
 
 export default function FinalizarComprasScreen() {   
     return (
-        <FinalizarCompras />
+        <TelaFinalizarCompra />
     );
 }

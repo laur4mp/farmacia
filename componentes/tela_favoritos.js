@@ -1,59 +1,62 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { produtos } from "../componentes/produtos";
+
+const CHAVE_FAVORITOS = "favoritos";
 
 const TelaFavoritos = () => {
 
-  const [favoritos, setFavoritos] = useState([
-    {
-      id: 1,
-      nome: 'Diploma monofratada',
-      descricao: '10 comprimidos',
-      preco: 'R$8.99',
-    },
-    {
-      id: 2,
-      nome: 'Paracetamol',
-      descricao: '10 comprimidos',
-      preco: 'R$8.99',
-    },
-    {
-      id: 3,
-      nome: 'Dipirona',
-      descricao: '20 comprimidos',
-      preco: 'R$12.99',
-    },
-    {
-      id: 4,
-      nome: 'Ibuprofeno',
-      descricao: '12 comprimidos',
-      preco: 'R$15.50',
-    },
-  ]);
+  const [favoritos, setFavoritos] = useState([]);
+  const carregarFavoritos = async () => {
+    try {
+      const storage = await AsyncStorage.getItem(CHAVE_FAVORITOS);
+      const ids = storage ? JSON.parse(storage) : [];
+      const filtrados = produtos.filter(p => ids.includes(p.id));
+      setFavoritos(filtrados);
+    } catch (error) {
+      console.log("Erro ao carregar favoritos", error);
+    }
+  };
+
+  // Carrega favoritos quando a tela abre
+  useEffect(() => {
+    carregarFavoritos();
+  }, []);
 
   // Função para remover um item dos favoritos
-  const removerFavorito = (id, nome) => {
-    Alert.alert(
-      'Remover dos favoritos',
-      `Deseja remover "${nome}" dos seus favoritos?`,
-      [
-        {
-          text: 'Cancelar',
-          style: 'cancel',
-        },
-        {
-          text: 'Remover',
-          style: 'destructive',
-          onPress: () => {
+  const removerFavorito = async (id, nome) => {
+  Alert.alert(
+    'Remover dos favoritos',
+    `Deseja remover "${nome}" dos seus favoritos?`,
+    [
+      {
+        text: 'Cancelar',
+        style: 'cancel',
+      },
+      {
+        text: 'Remover',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            // Remove da lista atual
             const novosFavoritos = favoritos.filter(item => item.id !== id);
             setFavoritos(novosFavoritos);
-            
+
+            // Atualiza o AsyncStorage
+            const ids = novosFavoritos.map(item => item.id);
+            await AsyncStorage.setItem(CHAVE_FAVORITOS, JSON.stringify(ids));
+
             Alert.alert('Sucesso', `${nome} foi removido dos favoritos!`);
-          },
+          } catch (error) {
+            console.log("Erro ao remover favorito", error);
+          }
         },
-      ]
-    );
-  };
+      },
+    ]
+  );
+};
 
   // Função para limpar todos os favoritos
   const limparTodosFavoritos = () => {
@@ -73,10 +76,16 @@ const TelaFavoritos = () => {
         {
           text: 'Limpar tudo',
           style: 'destructive',
-          onPress: () => {
-            setFavoritos([]);
-            Alert.alert('Sucesso', 'Todos os itens foram removidos dos favoritos!');
-          },
+          onPress: async () => {
+            try {
+              setFavoritos([]);
+              await AsyncStorage.setItem(CHAVE_FAVORITOS, JSON.stringify([]));
+              Alert.alert('Sucesso', 'Todos os itens foram removidos dos favoritos!');
+            } catch (error) {
+              console.log("Erro ao limpar favoritos", error);
+              Alert.alert('Erro', 'Não foi possível limpar os favoritos.');
+            }
+          }
         },
       ]
     );

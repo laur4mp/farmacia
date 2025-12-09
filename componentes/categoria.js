@@ -1,6 +1,7 @@
 import { View, Text, Dimensions, ScrollView, StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CardProduto from "../componentes/cardProduto";
 import TopBar from "../componentes/topbar";
 import { produtos } from "../componentes/produtos";
@@ -52,6 +53,7 @@ export default function Categoria() {
           status={prod.status}
           preco={prod.preco}
           imagem={prod.imagem}
+          estoque={prod.estoque}
           favorito={favoritos.includes(prod.id)}
           onToggle={() => toggleFavorito(prod.id)}
         />

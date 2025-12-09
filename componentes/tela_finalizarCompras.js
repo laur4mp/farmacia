@@ -4,13 +4,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { produtos as produtosGlobais } from '../componentes/produtos'; 
 const CHAVE_CARRINHO = 'carrinho'; 
+import { useRouter } from "expo-router";
 
 const parsePreco = (precoString) => {
     if (!precoString) return 0;
     return parseFloat(precoString.replace('R$', '').replace('.', '').replace(',', '.').trim());
 };
 
-const TelaFinalizarCompra = ({ navigation }) => { 
+const TelaFinalizarCompra = () => { 
+    const router = useRouter();
+
     const [formaPagamento, setFormaPagamento] = useState('boleto');
     const [produtosCarrinho, setProdutosCarrinho] = useState([]);
     const [valorTotalProdutos, setValorTotalProdutos] = useState(0);
@@ -101,9 +104,8 @@ const TelaFinalizarCompra = ({ navigation }) => {
         <View style={estilos.container}>
             <View style={estilos.topBar}>
                 <TouchableOpacity 
-                    onPress={() => navigation.goBack && navigation.goBack()} 
-                    style={estilos.backButton}
-                >
+                    onPress={() => router.back()}
+                    style={estilos.backButton}>
                     <Ionicons name="arrow-back" size={28} color="#333" />
                 </TouchableOpacity>
                 <Text style={estilos.tituloPrincipalBar}>Finalizar compra</Text>

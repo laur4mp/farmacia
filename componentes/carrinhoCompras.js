@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { produtos } from '../componentes/produtos'; 
+import { useRouter } from "expo-router";
 
 const { width } = Dimensions.get('window');
 
@@ -15,7 +16,9 @@ const parsePreco = (precoString) => {
     return parseFloat(precoString.replace('R$', '').replace('.', '').replace(',', '.').trim());
 };
 
-export default function CarrinhoCompras({ navigation }) {
+export default function CarrinhoCompras() {
+    const router = useRouter();
+
     const [itensCarrinhoDetalhado, setItensCarrinhoDetalhado] = useState([]);
     const [valorTotal, setValorTotal] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
@@ -154,7 +157,7 @@ export default function CarrinhoCompras({ navigation }) {
     return (
         <View style={styles.container}>
             <View style={styles.topBar}>
-                <TouchableOpacity onPress={() => navigation.goBack && navigation.goBack()} style={styles.backButton}>
+                <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name="arrow-back" size={28} color="#333" />
                 </TouchableOpacity>
                 <Text style={styles.titulo}>Carrinho</Text>
@@ -177,9 +180,10 @@ export default function CarrinhoCompras({ navigation }) {
                 <TouchableOpacity 
                     style={[styles.botaoFinalizar, carrinhoVazio && styles.botaoDesativado]}
                     disabled={carrinhoVazio}
-                >
+                    onPress={() => router.push("/finalizarCompras")}>
                     <Text style={styles.textoBotao}>Finalizar compra</Text>
                 </TouchableOpacity>
+
             </View>
         </View>
     );
