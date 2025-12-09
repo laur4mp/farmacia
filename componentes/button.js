@@ -30,13 +30,10 @@ export default function Login() {
     return (
     <View style={styles.container}>
         <View>
-            {/*parte que vai ficar a logo e as bolinhas de enfeite, n pensei ainda como fazer*/}
         </View>
-
         <Text style={styles.titulos}>Login</Text>
         
         <View>
-            {/*Parte q vai ficar os inputs*/}
             <TextInput
             placeholder='E-mail'
             placeholderTextColor='#9E9E9E'
@@ -64,7 +61,6 @@ export default function Login() {
           Clique aqui.
         </Text>
         </Text>
-
         <TouchableOpacity onPress={() => router.push('/cadastro')}>
             <Text style={styles.link}>
             Cadastre-se

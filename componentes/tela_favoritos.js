@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { produtos } from "../componentes/produtos";
+import { router } from 'expo-router';
 
 const CHAVE_FAVORITOS = "favoritos";
 
@@ -122,7 +123,7 @@ const TelaFavoritos = () => {
           <View key={item.id} style={styles.card}>
             <View style={styles.infoProduto}>
               <Text style={styles.nomeProduto}>{item.nome}</Text>
-              <Text style={styles.descricaoProduto}>{item.estoque} comprimidos</Text>
+              <Text style={styles.descricaoProduto}>{item.descricao}</Text>
             </View>
             <View style={styles.containerAcoes}>
               <Text style={styles.preco}>{item.preco}</Text>

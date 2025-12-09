@@ -46,7 +46,6 @@ export default function FormCadastro() {
       <TextInput style={styles.input} placeholder="Senha" value={senha} placeholderTextColor='#9E9E9E' onChangeText={setSenha} secureTextEntry />
       <TextInput style={styles.input} placeholder="Confirmar Senha" value={confSenha} placeholderTextColor='#9E9E9E' onChangeText={setConfSenha} secureTextEntry />
       <TextInput style={styles.input} placeholder="Telefone" value={telefone} placeholderTextColor='#9E9E9E' onChangeText={setTelefone} keyboardType="phone-pad" />
-
       <TouchableOpacity style={styles.botao} onPress={realizarCadastro}>
         <Text style={styles.botaoTexto}>Cadastrar</Text>
       </TouchableOpacity>

@@ -3,8 +3,13 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { produtos as produtosGlobais } from '../componentes/produtos'; 
-const CHAVE_CARRINHO = 'carrinho'; 
 import { useRouter } from "expo-router";
+
+const CHAVE_CARRINHO = 'carrinho'; 
+const CHAVE_PAGAMENTO = 'forma_pagamento_selecionada'; 
+const CHAVE_PRODUTOS_GLOBAL = 'produtos_global'; 
+// NOVO: Chave para salvar os detalhes do pedido final antes de limpar o carrinho.
+const CHAVE_PEDIDO_DETALHES = 'detalhes_ultimo_pedido'; 
 
 const parsePreco = (precoString) => {
     if (!precoString) return 0;
@@ -13,14 +18,33 @@ const parsePreco = (precoString) => {
 
 const TelaFinalizarCompra = () => { 
     const router = useRouter();
-
     const [formaPagamento, setFormaPagamento] = useState('boleto');
     const [produtosCarrinho, setProdutosCarrinho] = useState([]);
     const [valorTotalProdutos, setValorTotalProdutos] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    const [isProcessing, setIsProcessing] = useState(false); 
     const [error, setError] = useState(null);
+    
+    const alterarFormaPagamento = async (novaForma) => {
+        setFormaPagamento(novaForma);
+        try {
+            await AsyncStorage.setItem(CHAVE_PAGAMENTO, novaForma);
+        } catch (e) {
+            console.log('Erro ao salvar forma de pagamento:', e);
+        }
+    };
+
+    const carregarEstoqueAtual = async () => {
+        const estoqueJson = await AsyncStorage.getItem(CHAVE_PRODUTOS_GLOBAL);
+        if (estoqueJson) {
+            return JSON.parse(estoqueJson);
+        }
+        return produtosGlobais;
+    };
+
 
     const carregarEProcessarCarrinho = useCallback(async () => {
+        // ... (código existente para carregar carrinho e estoque)
         setIsLoading(true);
         setError(null);
         let totalGeral = 0;
@@ -29,6 +53,13 @@ const TelaFinalizarCompra = () => {
             const carrinhoJson = await AsyncStorage.getItem(CHAVE_CARRINHO);
             const carrinhoSalvo = carrinhoJson ? JSON.parse(carrinhoJson) : [];
 
+            const pagamentoSalvo = await AsyncStorage.getItem(CHAVE_PAGAMENTO);
+            if (pagamentoSalvo) {
+                setFormaPagamento(pagamentoSalvo);
+            }
+            
+            const estoqueAtual = await carregarEstoqueAtual();
+            
             if (carrinhoSalvo.length === 0) {
                 setProdutosCarrinho([]);
                 setValorTotalProdutos(0);
@@ -37,11 +68,12 @@ const TelaFinalizarCompra = () => {
             }
 
             const itensDetalhado = carrinhoSalvo.map(itemSalvo => {
-                const produtoDetalhe = produtosGlobais.find(p => p.id === itemSalvo.id);
+                const produtoDetalhe = estoqueAtual.find(p => p.id === itemSalvo.id);
                 
                 if (!produtoDetalhe) {
                     return null;
                 } 
+                
                 const precoUnitarioNumerico = parsePreco(produtoDetalhe.preco);
                 const subtotalNumerico = precoUnitarioNumerico * itemSalvo.quantidade;
                 totalGeral += subtotalNumerico;
@@ -53,6 +85,7 @@ const TelaFinalizarCompra = () => {
                     preco: precoUnitarioNumerico, 
                     quantidade: itemSalvo.quantidade, 
                     subtotal: subtotalNumerico, 
+                    estoque: produtoDetalhe.estoque, 
                 };
             }).filter(item => item !== null);
 
@@ -60,18 +93,85 @@ const TelaFinalizarCompra = () => {
             setValorTotalProdutos(totalGeral);
 
         } catch (err) {
+            console.error("Erro ao carregar carrinho:", err);
             setError("Não foi possível carregar os produtos do seu carrinho.");
         } finally {
             setIsLoading(false);
         }
+        // ... (fim do código existente)
     }, []);
+    
+    const frete = 0;
+    const valorTotalGeral = valorTotalProdutos + frete;
 
+    // FUNÇÃO ATUALIZADA: Agora salva os produtos comprados antes de limpar o carrinho.
+    const handleConfirmarCompra = async () => {
+        setIsProcessing(true);
+        
+        try {
+            const estoqueAtual = await carregarEstoqueAtual();
+            let estoqueSuficiente = true;
+            
+            // 1. Validação final de estoque
+            for (const item of produtosCarrinho) {
+                const produtoEmEstoque = estoqueAtual.find(p => p.id === item.id);
+                
+                if (!produtoEmEstoque || produtoEmEstoque.estoque < item.quantidade) {
+                    estoqueSuficiente = false;
+                    Alert.alert(
+                        "Estoque Insuficiente",
+                        `O produto "${item.nome}" não tem mais ${item.quantidade} unidades em estoque. Estoque atual: ${produtoEmEstoque ? produtoEmEstoque.estoque : 0}. Por favor, ajuste seu carrinho.`,
+                        [{ text: "OK" }]
+                    );
+                    carregarEProcessarCarrinho();
+                    return; 
+                }
+            }
+            if (estoqueSuficiente) {
+                
+                // 2. ATUALIZAÇÃO DO ESTOQUE
+                const novoEstoque = estoqueAtual.map(produto => {
+                    const itemComprado = produtosCarrinho.find(c => c.id === produto.id);
+                    if (itemComprado) {
+                        return { 
+                            ...produto, 
+                            estoque: produto.estoque - itemComprado.quantidade 
+                        };
+                    }
+                    return produto;
+                });
+                const detalhesPedido = {
+                    produtos: produtosCarrinho.map(({ id, nome, quantidade, subtotal }) => ({
+                        id, 
+                        nome, 
+                        quantidade, 
+                        subtotal 
+                    })),
+                    total: valorTotalGeral,
+                    data: new Date().toISOString(),
+                    formaPagamento: formaPagamento,
+                };
+                await AsyncStorage.setItem(CHAVE_PEDIDO_DETALHES, JSON.stringify(detalhesPedido));
+                await AsyncStorage.setItem(CHAVE_PRODUTOS_GLOBAL, JSON.stringify(novoEstoque));
+                await AsyncStorage.removeItem(CHAVE_CARRINHO);
+                router.push('/pagamento') // Rota para a tela de pagamento          
+                setProdutosCarrinho([]);
+                setValorTotalProdutos(0);
+            }
+
+        } catch (e) {
+            console.error("Erro ao finalizar compra:", e);
+            Alert.alert("Erro", "Não foi possível processar a sua compra. Tente novamente.");
+        } finally {
+            setIsProcessing(false);
+        }
+    };
     useEffect(() => {
         carregarEProcessarCarrinho();
     }, [carregarEProcessarCarrinho]);
 
     if (isLoading) {
-        return (
+       return (
             <View style={[estilos.container, estilos.loadingContainer]}>
                 <ActivityIndicator size="large" color={'#4CAF50'} />
                 <Text style={estilos.loadingText}>Preparando seu pedido...</Text>
@@ -79,8 +179,10 @@ const TelaFinalizarCompra = () => {
         );
     }
     if (error) {
+
         return (
             <View style={[estilos.container, estilos.loadingContainer]}>
+                <Text style={estilos.tituloPrincipalBar}>Finalizar compra</Text>
                 <Text style={estilos.errorText}>{error}</Text>
                 <TouchableOpacity onPress={carregarEProcessarCarrinho} style={estilos.botaoRetry}>
                     <Text style={estilos.textoBotao}>Tentar Novamente</Text>
@@ -93,12 +195,13 @@ const TelaFinalizarCompra = () => {
             <View style={[estilos.container, estilos.loadingContainer]}>
                 <Text style={estilos.tituloPrincipalBar}>Finalizar compra</Text>
                 <Text style={estilos.textoVazio}>Seu carrinho está vazio. Volte para a loja!</Text>
+                <TouchableOpacity onPress={() => router.push('/home')} style={[estilos.botaoRetry, { marginTop: 20 }]}>
+                    <Text style={estilos.textoBotao}>Ir para a Loja</Text>
+                </TouchableOpacity>
             </View>
         );
     }
 
-    const frete = 0;
-    const valorTotalGeral = valorTotalProdutos + frete;
 
     return (
         <View style={estilos.container}>
@@ -131,6 +234,11 @@ const TelaFinalizarCompra = () => {
                                     </Text>
                                 </View>
                             </View>
+                            {produto.estoque !== undefined && produto.quantidade > produto.estoque && (
+                                <Text style={estilos.alertaEstoque}>
+                                    Atenção: Apenas {produto.estoque} em estoque! Por favor, ajuste a quantidade.
+                                </Text>
+                            )}
                             {index < produtosCarrinho.length - 1 && (
                                 <View style={estilos.linhaDivisoria} />
                             )}
@@ -147,7 +255,7 @@ const TelaFinalizarCompra = () => {
                                 estilos.opcaoPagamento,
                                 formaPagamento === 'boleto' && estilos.opcaoSelecionada
                             ]}
-                            onPress={() => setFormaPagamento('boleto')}
+                            onPress={() => alterarFormaPagamento('boleto')}
                         >
                             <View style={estilos.radioContainer}>
                                 <View style={[
@@ -172,7 +280,7 @@ const TelaFinalizarCompra = () => {
                                 estilos.opcaoPagamento,
                                 formaPagamento === 'cartao' && estilos.opcaoSelecionada
                             ]}
-                            onPress={() => setFormaPagamento('cartao')}
+                            onPress={() => alterarFormaPagamento('cartao')}
                         >
                             <View style={estilos.radioContainer}>
                                 <View style={[
@@ -218,14 +326,23 @@ const TelaFinalizarCompra = () => {
                 <View style={{ height: 100 }} /> 
             </ScrollView>
 
-            <TouchableOpacity style={estilos.botaoConfirmar}>
-                <Text style={estilos.textoBotao}>Confirmar compra</Text>
+            <TouchableOpacity 
+                style={[estilos.botaoConfirmar, isProcessing && estilos.botaoDesabilitado]}
+                onPress={handleConfirmarCompra}
+                disabled={isProcessing}
+            >
+                {isProcessing ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                    <Text style={estilos.textoBotao}>Confirmar compra</Text>
+                )}
             </TouchableOpacity>
         </View>
     );
 };
 
 const estilos = StyleSheet.create({
+
     container: {
         flex: 1,
         backgroundColor: '#fff',
@@ -246,6 +363,8 @@ const estilos = StyleSheet.create({
         left: 0,
         right: 0,
         zIndex: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
     },
     backButton: {
         position: 'absolute',
@@ -263,6 +382,7 @@ const estilos = StyleSheet.create({
     loadingContainer: {
         justifyContent: 'center',
         alignItems: 'center',
+        flex: 1, 
     },
     loadingText: {
         marginTop: 10,
@@ -274,6 +394,7 @@ const estilos = StyleSheet.create({
         color: 'red',
         textAlign: 'center',
         marginBottom: 15,
+        marginTop: 20,
     },
     textoVazio: {
         marginTop: 20,
@@ -325,6 +446,16 @@ const estilos = StyleSheet.create({
         fontSize: 13,
         color: '#888',
         marginBottom: 2,
+    },
+    alertaEstoque: {
+        fontSize: 13,
+        color: '#D32F2F', 
+        backgroundColor: '#FFEBEE',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 4,
+        marginVertical: 5,
+        textAlign: 'center',
     },
     linhaDivisoria: {
         height: 1,
@@ -452,11 +583,15 @@ const estilos = StyleSheet.create({
         marginBottom: 20,
         zIndex: 10,
     },
+    botaoDesabilitado: { 
+        backgroundColor: '#A5D6A7', 
+    },
     textoBotao: {
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
     },
+
 });
 
 export default TelaFinalizarCompra;
