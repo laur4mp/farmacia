@@ -5,6 +5,7 @@ export const produtos = [
     categoria: "Medicamentos",
     status: "Disponível",
     preco: "R$ 10,00",
+    estoque: 50, 
     imagem: require("../assets/dipirona.png")
   },
   {
@@ -13,6 +14,7 @@ export const produtos = [
     categoria: "Medicamentos",
     status: "Indisponível",
     preco: "R$ 8,50",
+    estoque: 0, 
     imagem: require("../assets/paracetamol.png")
   },
   {
@@ -21,6 +23,7 @@ export const produtos = [
     categoria: "Higiene",
     status: "Disponível",
     preco: "R$ 19,90",
+    estoque: 35, 
     imagem: require("../assets/shampoo.png")
   },
   {
@@ -29,6 +32,7 @@ export const produtos = [
     categoria: "Higiene",
     status: "Disponível",
     preco: "R$ 6,50",
+    estoque: 100, 
     imagem: require("../assets/cremeDental.png")
   },
   {
@@ -37,6 +41,7 @@ export const produtos = [
     categoria: "Suplementos",
     status: "Disponível",
     preco: "R$ 25,00",
+    estoque: 22, 
     imagem: require("../assets/vitaminaC.png")
   },
   {
@@ -45,6 +50,7 @@ export const produtos = [
     categoria: "Higiene",
     status: "Disponível",
     preco: "R$ 4,50",
+    estoque: 68, 
     imagem: require("../assets/sabonete.png")
   },
   {
@@ -53,6 +59,7 @@ export const produtos = [
     categoria: "Suplementos",
     status: "Disponível",
     preco: "R$ 32,00",
+    estoque: 15, 
     imagem: require("../assets/vitaminaD.png")
   },
   {
@@ -61,6 +68,7 @@ export const produtos = [
     categoria: "Suplementos",
     status: "Indisponível",
     preco: "R$ 28,90",
+    estoque: 0, 
     imagem: require("../assets/omega3.png")
   },
   {
@@ -69,6 +77,7 @@ export const produtos = [
     categoria: "Beleza",
     status: "Disponível",
     preco: "R$ 19,90",
+    estoque: 40, 
     imagem: require("../assets/batom.png")
   },
   {
@@ -77,6 +86,7 @@ export const produtos = [
     categoria: "Beleza",
     status: "Indisponível",
     preco: "R$ 36,00",
+    estoque: 0, 
     imagem: require("../assets/bepantol.png")
   }
 ];
