@@ -122,7 +122,7 @@ const TelaFavoritos = () => {
           <View key={item.id} style={styles.card}>
             <View style={styles.infoProduto}>
               <Text style={styles.nomeProduto}>{item.nome}</Text>
-              <Text style={styles.descricaoProduto}>{item.descricao}</Text>
+              <Text style={styles.descricaoProduto}>{item.estoque} comprimidos</Text>
             </View>
             <View style={styles.containerAcoes}>
               <Text style={styles.preco}>{item.preco}</Text>
